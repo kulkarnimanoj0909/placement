@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Landing from "./components/Landing";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+import Admin from "./components/Admin"; // Ensure correct import
+import Dashboard from "./components/Dashboard"; // Ensure correct import
+import UpcomingPlacements from "./components/UpcomingPlacements"; // adjust path
+import Assessment from  "./components/Assessment"; // adjust path
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<Admin />} /> {/* Ensure route exists */}
+        <Route path="/upcoming-placements" element={<UpcomingPlacements />} />
+        <Route path="/Assessment" element={<Assessment />} /> {/* Ensure route exists */}
+        <Route path="/dashboard" element={<Dashboard />} /> {/* Ensure route exists */}
+      </Routes>
+      
+    </Router>
   );
 }
 
 export default App;
+
+

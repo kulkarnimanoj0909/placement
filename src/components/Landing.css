@@ -1,0 +1,144 @@
+/* Global Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;  /* White background */
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.glass-navbar {
+    background: black;  /* Black navbar */
+    color: white;
+    padding: 15px 20px;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Navbar links */
+.glass-navbar .navbar-brand,
+.glass-navbar .nav-link,
+.glass-navbar .btn {
+    color: white !important;  /* Ensures text is visible */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* Navbar links hover effect */
+.glass-navbar .nav-link:hover,
+.glass-navbar .btn:hover {
+    color: #FFD700 !important;  /* Gold color on hover */
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    padding: 120px 20px;
+    background: #f8f9fa;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    color: #555;
+    margin-top: 15px;
+}
+
+/* About, Recruiters, Placement Section Titles */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #222;
+}
+
+/* About Section */
+.about-text {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #444;
+    padding: 0 20px;
+}
+
+/* Recruiters Section */
+.recruiters-section {
+    background: #ffffff;
+    padding: 50px 0;
+}
+
+.marquee-container img {
+    height: 80px;
+    margin: 0 25px;
+    filter: grayscale(50%);
+    transition: filter 0.3s;
+}
+
+
+
+/* Chart Section */
+.chart-card {
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+/* Contact Section */
+.footer-section {
+    background: black;  /* Black footer */
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.footer-section p {
+    margin: 8px 0;
+}
+
+/* Start Button */
+.start-btn {
+    background-color: #28a745;  /* Bootstrap green */
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.start-btn:hover {
+    background-color: #218838;  /* Darker green on hover */
+}
+
+/* Login Button */
+.login-btn {
+    background-color: #28a745;  /* Bootstrap green */
+    color: white !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 20px;
+    margin-left: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #218838;  /* Darker green on hover */
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1.1rem;
+}
+}

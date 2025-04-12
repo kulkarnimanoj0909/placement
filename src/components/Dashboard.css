@@ -1,0 +1,48 @@
+.dashboard-container {
+    text-align: center;
+    padding: 22px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #343536;
+    padding: 15px 20px;
+    color: white;
+  }
+  
+  .nav-links button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 10px;
+  }
+  
+  .nav-links button:hover {
+    text-decoration: underline;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .dashboard-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  
+  .dashboard-card:hover {
+    transform: scale(1.05);
+    background: #f8f9fa;
+  }
+  
