@@ -16,6 +16,7 @@ const Dashboard = () => {
           <button onClick={() => navigate("/Assessment")}>Assessment</button>
           <button onClick={() => navigate("/courses")}>Courses</button>
           <button onClick={() => navigate("/upcoming-placements")}>Upcoming Placements</button>
+          <button onClick={() => navigate("/interview")}>Inter</button>
         </div>
       </nav>
 
@@ -41,6 +42,13 @@ const Dashboard = () => {
           <h3>Upcoming Placements</h3>
           <p>Check upcoming placement opportunities.</p>
         </div>
+       
+        <div className="interview-card" onClick={() => navigate("/interview")}>
+          <h3>Interview Assistant</h3>
+          <p>CDheck Your Communication and Interview Cracking Skill</p>
+        </div>
+        
+
       </div>
     </div>
   );

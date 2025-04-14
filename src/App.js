@@ -7,7 +7,7 @@ import Admin from "./components/Admin"; // Ensure correct import
 import Dashboard from "./components/Dashboard"; // Ensure correct import
 import UpcomingPlacements from "./components/UpcomingPlacements"; // adjust path
 import Assessment from  "./components/Assessment"; // adjust path
-
+import InterviewAssistant from './components/InterviewAssistant';
 function App() {
   return (
     <Router>
@@ -19,6 +19,7 @@ function App() {
         <Route path="/upcoming-placements" element={<UpcomingPlacements />} />
         <Route path="/Assessment" element={<Assessment />} /> {/* Ensure route exists */}
         <Route path="/dashboard" element={<Dashboard />} /> {/* Ensure route exists */}
+        <Route path="/interview" element={<InterviewAssistant />} />
       </Routes>
       
     </Router>
