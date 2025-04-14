@@ -1,0 +1,341 @@
+[
+    {
+      "question": "What is the primary key in a SQL table?",
+      "answers": {
+        "answer_a": "A column that uniquely identifies each row",
+        "answer_b": "A column that contains duplicate values",
+        "answer_c": "A column used for indexing"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL command is used to retrieve data from a table?",
+      "answers": {
+        "answer_a": "SELECT",
+        "answer_b": "INSERT",
+        "answer_c": "DELETE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL keyword is used to sort the result set in ascending or descending order?",
+      "answers": {
+        "answer_a": "ORDER BY",
+        "answer_b": "GROUP BY",
+        "answer_c": "SORT"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which clause is used to filter records in a SQL query?",
+      "answers": {
+        "answer_a": "WHERE",
+        "answer_b": "FILTER",
+        "answer_c": "HAVING"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What is a foreign key in SQL?",
+      "answers": {
+        "answer_a": "A key that links two tables together",
+        "answer_b": "A primary key in a table",
+        "answer_c": "A unique key for indexing"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL statement is used to update data in a table?",
+      "answers": {
+        "answer_a": "UPDATE",
+        "answer_b": "SET",
+        "answer_c": "CHANGE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which of the following is used to combine rows from two or more tables?",
+      "answers": {
+        "answer_a": "JOIN",
+        "answer_b": "MERGE",
+        "answer_c": "COMBINE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL function is used to count the number of rows in a table?",
+      "answers": {
+        "answer_a": "COUNT()",
+        "answer_b": "SUM()",
+        "answer_c": "AVG()"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What is the purpose of the DISTINCT keyword in SQL?",
+      "answers": {
+        "answer_a": "To select unique values",
+        "answer_b": "To sort the result set",
+        "answer_c": "To update the table"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL command is used to remove a table from a database?",
+      "answers": {
+        "answer_a": "DROP TABLE",
+        "answer_b": "DELETE TABLE",
+        "answer_c": "REMOVE TABLE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL keyword is used to remove duplicate records from the result set?",
+      "answers": {
+        "answer_a": "DISTINCT",
+        "answer_b": "UNIQUE",
+        "answer_c": "REMOVE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which of the following SQL commands is used to add a new column to an existing table?",
+      "answers": {
+        "answer_a": "ALTER TABLE",
+        "answer_b": "MODIFY TABLE",
+        "answer_c": "ADD COLUMN"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What does the SQL LIMIT clause do?",
+      "answers": {
+        "answer_a": "Limits the number of records returned",
+        "answer_b": "Limits the size of the table",
+        "answer_c": "Limits the amount of memory used"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which keyword is used to return only distinct (unique) values?",
+      "answers": {
+        "answer_a": "DISTINCT",
+        "answer_b": "UNIQUE",
+        "answer_c": "EXCLUSIVE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What is a subquery in SQL?",
+      "answers": {
+        "answer_a": "A query inside another query",
+        "answer_b": "A query that returns multiple rows",
+        "answer_c": "A query that is used for indexing"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which function is used to get the highest value in a column in SQL?",
+      "answers": {
+        "answer_a": "MAX()",
+        "answer_b": "MIN()",
+        "answer_c": "AVG()"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which of the following is used to define a relationship between two tables in SQL?",
+      "answers": {
+        "answer_a": "FOREIGN KEY",
+        "answer_b": "PRIMARY KEY",
+        "answer_c": "UNIQUE KEY"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL clause is used to group rows that have the same values?",
+      "answers": {
+        "answer_a": "GROUP BY",
+        "answer_b": "ORDER BY",
+        "answer_c": "DISTINCT"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL function is used to return the number of rows in a table?",
+      "answers": {
+        "answer_a": "COUNT()",
+        "answer_b": "SUM()",
+        "answer_c": "AVG()"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What does the SQL IN operator do?",
+      "answers": {
+        "answer_a": "Checks if a value is within a set of values",
+        "answer_b": "Compares two columns",
+        "answer_c": "Joins tables"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL keyword is used to combine the results of two or more SELECT statements?",
+      "answers": {
+        "answer_a": "UNION",
+        "answer_b": "JOIN",
+        "answer_c": "MERGE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which of the following SQL commands is used to delete all rows in a table without deleting the table?",
+      "answers": {
+        "answer_a": "TRUNCATE",
+        "answer_b": "DELETE",
+        "answer_c": "DROP"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL command is used to create a new database?",
+      "answers": {
+        "answer_a": "CREATE DATABASE",
+        "answer_b": "NEW DATABASE",
+        "answer_c": "MAKE DATABASE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "Which SQL statement is used to create a new table?",
+      "answers": {
+        "answer_a": "CREATE TABLE",
+        "answer_b": "NEW TABLE",
+        "answer_c": "MAKE TABLE"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What is the purpose of the SQL HAVING clause?",
+      "answers": {
+        "answer_a": "Used to filter groups of records",
+        "answer_b": "Used to filter individual records",
+        "answer_c": "Used to join tables"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    },
+    {
+      "question": "What does the SQL LIKE operator do?",
+      "answers": {
+        "answer_a": "Searches for a specified pattern in a column",
+        "answer_b": "Checks if a value exists in a table",
+        "answer_c": "Filters the records"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true",
+        "answer_b_correct": "false",
+        "answer_c_correct": "false"
+      }
+    }
+  ]
+  

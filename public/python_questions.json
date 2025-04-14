@@ -1,0 +1,54 @@
+[
+    {
+      "question": "What is the output of print(2 ** 3)?",
+      "answers": {
+        "answer_a": "6",
+        "answer_b": "8",
+        "answer_c": "9"
+      },
+      "correct_answers": {
+        "answer_b_correct": "true"
+      }
+    },
+    {
+      "question": "Which of these is a Python data type?",
+      "answers": {
+        "answer_a": "integer",
+        "answer_b": "number",
+        "answer_c": "digit"
+      },
+      "correct_answers": {
+        "answer_a_correct": "true"
+      }
+    }
+    ,
+        {
+          "question": "What is the output of print(2 ** 3)?",
+          "answers": {
+            "answer_a": "6",
+            "answer_b": "8",
+            "answer_c": "9"
+          },
+          "correct_answers": {
+            "answer_a_correct": "false",
+            "answer_b_correct": "true",
+            "answer_c_correct": "false"
+          }
+        },
+        {
+          "question": "Which of these is a Python data type?",
+          "answers": {
+            "answer_a": "integer",
+            "answer_b": "number",
+            "answer_c": "digit"
+          },
+          "correct_answers": {
+            "answer_a_correct": "true",
+            "answer_b_correct": "false",
+            "answer_c_correct": "false"
+          }
+        }
+      
+      
+  ]
+  

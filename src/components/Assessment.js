@@ -1,131 +1,192 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './Assessment.css';
 
 const Assessment = () => {
-  const [jobRole, setJobRole] = useState('');
   const [questions, setQuestions] = useState([]);
+  const [timeRemaining, setTimeRemaining] = useState(300); // 5 minutes
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState('');
   const [answers, setAnswers] = useState({});
-  const [timer, setTimer] = useState(30 * 60); // 30 minutes in seconds
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Tech stack options (job roles)
-  const jobRoles = ['JavaScript', 'Python', 'Java', 'C++'];
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (jobRole) {
-      fetchQuestions(jobRole); // Fetch questions based on job role
+  const fetchQuestions = async (category) => {
+    const cached = localStorage.getItem(`quiz-${category}`);
+    if (cached) {
+      setQuestions(JSON.parse(cached));
+      setQuizStarted(true);
+      setQuizCompleted(false);
+      setScore(null);
+      setError(null);
+      return;
     }
-  }, [jobRole]);
 
-  // Timer function: Countdown every second
-  useEffect(() => {
-    let interval;
-    if (timer > 0 && !isSubmitted) {
-      interval = setInterval(() => {
-        setTimer(prevTimer => prevTimer - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      handleSubmit(); // Auto submit when time is up
-    }
-    return () => clearInterval(interval); // Clean up on unmount
-  }, [timer, isSubmitted]);
-
-  // Fetch questions based on job role
-  const fetchQuestions = async (role) => {
     try {
-      const response = await axios.get('https://api.stackexchange.com/2.3/questions', {
-        params: {
-          site: 'stackoverflow',
-          order: 'desc',
-          sort: 'activity',
-          tagged: role.toLowerCase(),
-          pagesize: 20, // Fetch 20 questions
-        },
-      });
-      setQuestions(response.data.items);
+      setLoading(true);
+
+      // Local JSON fallback for Python quiz
+      if (category.toLowerCase() === 'python') {
+        const localRes = await fetch('/python_questions.json');
+        const localData = await localRes.json();
+        setQuestions(localData);
+        localStorage.setItem(`quiz-${category}`, JSON.stringify(localData));
+      }
+      // Local JSON fallback for SQL quiz
+      else if (category.toLowerCase() === 'sql') {
+        const localRes = await fetch('/sql_questions.json');
+        const localData = await localRes.json();
+        setQuestions(localData);
+        localStorage.setItem(`quiz-${category}`, JSON.stringify(localData));
+      } 
+      else {
+        // Fetch questions from API for other categories
+        const res = await axios.get('https://quizapi.io/api/v1/questions', {
+          //https://quizapi.io/api/v1/questions?category=pythong&limit=5
+          headers: {
+            'X-Api-Key': process.env.REACT_APP_QUIZAPI_KEY,
+          },
+          params: {
+            category: category,
+            limit: 5,
+          },
+        });
+        setQuestions(res.data);
+        localStorage.setItem(`quiz-${category}`, JSON.stringify(res.data));
+      }
+
+      setQuizStarted(true);
+      setQuizCompleted(false);
+      setScore(null);
+      setError(null);
     } catch (error) {
-      console.error('Error fetching questions: ', error);
+      if (error.response && error.response.data.error === 'Too Many Requests') {
+        setError('API rate limit exceeded. Using fallback questions.');
+        if (category.toLowerCase() === 'sql') {
+          // Fallback to local SQL questions if API limit is reached
+          const localRes = await fetch('/sql_questions.json');
+          const localData = await localRes.json();
+          setQuestions(localData);
+          localStorage.setItem(`quiz-${category}`, JSON.stringify(localData));
+        }
+      } else {
+        console.error('Error fetching questions:', error);
+        setError('Failed to fetch questions. Please try another quiz.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle answer selection
-  const handleAnswerChange = (questionId, selectedAnswer) => {
-    setAnswers(prevAnswers => ({
+  const handleQuizSelect = (quiz) => {
+    setSelectedQuiz(quiz);
+    fetchQuestions(quiz);
+  };
+
+  const handleAnswerChange = (questionIndex, answer) => {
+    setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [questionId]: selectedAnswer,
+      [questionIndex]: answer,
     }));
   };
 
-  // Handle form submission (e.g., when time is up or user submits manually)
-  const handleSubmit = () => {
-    let correctAnswers = 0;
+  useEffect(() => {
+    if (timeRemaining > 0 && quizStarted && !quizCompleted) {
+      const timer = setInterval(() => {
+        setTimeRemaining((prevTime) => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+    if (timeRemaining <= 0 && quizStarted && !quizCompleted) {
+      calculateScore();
+    }
+  }, [timeRemaining, quizStarted, quizCompleted]);
 
-    // Loop through questions and compare selected answers with correct answers
-    questions.forEach(question => {
-      if (answers[question.question_id] === question.correct_answer) {
-        correctAnswers++;
+  const calculateScore = () => {
+    let correct = 0;
+
+    questions.forEach((question, index) => {
+      const selectedAnswerKey = answers[index];
+      const correctAnswerKey = Object.entries(question.correct_answers)
+        .find(([key, value]) => value === "true");
+
+      if (correctAnswerKey) {
+        const correctKey = correctAnswerKey[0].split("_")[1]; // e.g., "a"
+        if (selectedAnswerKey && selectedAnswerKey.endsWith(correctKey)) {
+          correct += 1;
+        }
       }
     });
 
-    // Calculate score
-    setScore(correctAnswers);
-    setIsSubmitted(true);
+    setScore(correct);
+    setQuizCompleted(true);
   };
 
-  // Format time (e.g., 30:00)
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  const handleSubmit = () => {
+    calculateScore();
+  };
+
+  const goToDashboard = () => {
+    navigate('/dashboard');
   };
 
   return (
     <div className="assessment-container">
-      <h1>Select Tech Stack</h1>
-      <select onChange={(e) => setJobRole(e.target.value)} value={jobRole}>
-        <option value="">Select a Tech Stack</option>
-        {jobRoles.map((role) => (
-          <option key={role} value={role}>{role}</option>
-        ))}
+      <h2 className="heading">Select a Technical Quiz</h2>
+      <select className="quiz-select" onChange={(e) => handleQuizSelect(e.target.value)} value={selectedQuiz}>
+        <option value="">Select Quiz</option>
+        <option value="Linux">Linux</option>
+        <option value="DevOps">DevOps</option>
+        <option value="Docker">Docker</option>
+        <option value="SQL">SQL</option>
+        <option value="python">Python</option>
       </select>
 
-      {jobRole && !isSubmitted && (
-        <div>
-          <h2>Answer the following questions within 30 minutes:</h2>
-          <div className="timer">
-            Time Left: {formatTime(timer)}
+      {loading && <p className="loading">⏳ Loading questions...</p>}
+      {error && <p className="error">{error}</p>}
+
+      {quizStarted && !loading && (
+        <div className="quiz-section">
+          <div className="quiz-header">
+            <h2>Online Assessment: {selectedQuiz}</h2>
+            <p className="timer">⏱ Time Remaining: {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, '0')}</p>
           </div>
 
-          <div className="questions-container">
-            {questions.map((question) => (
-              <div key={question.question_id} className="question">
-                <h3>{question.title}</h3>
-                <div className="answers">
-                  {question.answers.map((answer, index) => (
-                    <div key={index} className="answer-option">
-                      <input
-                        type="radio"
-                        name={question.question_id}
-                        value={answer}
-                        onChange={() => handleAnswerChange(question.question_id, answer)}
-                      />
-                      <label>{answer}</label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+          {questions.map((q, index) => (
+            <div key={index} className="question-card">
+              <p className="question"><strong>Q{index + 1}:</strong> {q.question}</p>
+              {Object.entries(q.answers).map(([key, value]) =>
+                value ? (
+                  <div key={key} className="answer-option">
+                    <input 
+                      type="radio" 
+                      name={`q-${index}`} 
+                      value={key} 
+                      checked={answers[index] === key}
+                      onChange={() => handleAnswerChange(index, key)} 
+                    />
+                    <label>{value}</label>
+                  </div>
+                ) : null
+              )}
+            </div>
+          ))}
 
-            <button onClick={handleSubmit}>Submit Test</button>
-          </div>
-        </div>
-      )}
+          {!quizCompleted && (
+            <button className="submit-btn" onClick={handleSubmit}>Submit</button>
+          )}
 
-      {isSubmitted && (
-        <div className="result">
-          <h2>Your Score: {score} / {questions.length}</h2>
+          {quizCompleted && (
+            <div className="score-section">
+              <h3>Your Score: <span className="score">{score} / {questions.length}</span></h3>
+              <button className="dashboard-btn" onClick={goToDashboard}>Go to Dashboard</button>
+            </div>
+          )}
         </div>
       )}
     </div>
