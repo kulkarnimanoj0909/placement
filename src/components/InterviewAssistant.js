@@ -1,46 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db } from './firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import './InterviewAssistant.css';
 import axios from 'axios';
-import './InterviewAssistant.css'; // Importing the new CSS styles
+
+const GEMINI_API_KEY = 'AIzaSyDrGTILPyQBmno4stooykMRphAN4t6nEPw'; // Replace with your key
 
 const InterviewAssistant = () => {
-    const [answer, setAnswer] = useState('');
-    const [sentimentScore, setSentimentScore] = useState(null);
-    const [sentimentMagnitude, setSentimentMagnitude] = useState(null);
+    const [videos, setVideos] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [userMessage, setUserMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleAnswerChange = (event) => {
-        setAnswer(event.target.value);
-    };
+    useEffect(() => {
+        const fetchVideos = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'interview_videos'));
+                const videosData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setVideos(videosData);
+            } catch (error) {
+                console.error('Error fetching videos:', error);
+            }
+        };
+        fetchVideos();
+    }, []);
 
-    const analyzeAnswer = async () => {
+    const handleSendMessage = async () => {
+        if (!userMessage.trim()) return;
+
+        const newMessage = { sender: 'user', text: userMessage };
+        setMessages(prev => [...prev, newMessage]);
+        setUserMessage('');
+        setLoading(true);
+
         try {
-            const response = await axios.post('http://localhost:5000/analyze-answer', { answer });
+            const response = await axios.post(
+                'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + GEMINI_API_KEY,
+                {
+                    contents: [{ parts: [{ text: userMessage }] }]
+                }
+            );
 
-            setSentimentScore(response.data.sentimentScore);
-            setSentimentMagnitude(response.data.sentimentMagnitude);
+            const botText = response.data.candidates[0]?.content?.parts[0]?.text || 'Sorry, I could not understand.';
+            const botResponse = { sender: 'bot', text: botText };
+
+            setMessages(prev => [...prev, botResponse]);
         } catch (error) {
-            console.error('Error analyzing answer:', error);
+            console.error('Error sending message to Gemini:', error);
+            setMessages(prev => [...prev, { sender: 'bot', text: '❌ Error contacting Gemini API.' }]);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="interview-cardd">
-            <h2>Interview Assistant</h2>
-            <textarea
-                value={answer}
-                onChange={handleAnswerChange}
-                rows="6"
-                cols="40"
-                placeholder="Enter interview answer..."
-            />
-            <br />
-            <button onClick={analyzeAnswer}>Analyze Answer</button>
-
-            {sentimentScore !== null && (
-                <div>
-                    <p>Sentiment Score: {sentimentScore}</p>
-                    <p>Sentiment Magnitude: {sentimentMagnitude}</p>
+        <div className="interview-container">
+            {/* Left Side: Videos */}
+            <div className="video-section">
+                <h2>📹 Interview Prep Videos</h2>
+                <div className="video-grid">
+                    {videos.length > 0 ? (
+                        videos.map((video) => (
+                            <div className="video-card" key={video.id}>
+                                <h4>{video.title}</h4>
+                                <div
+                                    className="video-iframe"
+                                    dangerouslySetInnerHTML={{ __html: video.Video_url }}
+                                />
+                                <p>{video.Description}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No videos available.</p>
+                    )}
                 </div>
-            )}
+            </div>
+
+            {/* Right Side: Chatbot */}
+            <div className="chatbot-section">
+                <h2>🤖 Chat with Interview Assistant</h2>
+                <div className="chat-box">
+                    {messages.map((msg, index) => (
+                        <div
+                            key={index}
+                            className={`chat-message ${msg.sender === 'user' ? 'user' : 'bot'}`}
+                        >
+                            {msg.text}
+                        </div>
+                    ))}
+                    {loading && <div className="chat-message bot">⏳ Thinking...</div>}
+                </div>
+                <div className="chat-input">
+                    <input
+                        type="text"
+                        value={userMessage}
+                        onChange={(e) => setUserMessage(e.target.value)}
+                        placeholder="Ask me anything about interviews..."
+                    />
+                    <button onClick={handleSendMessage}>Send</button>
+                </div>
+            </div>
         </div>
     );
 };
