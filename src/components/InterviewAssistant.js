@@ -11,6 +11,7 @@ const InterviewAssistant = () => {
     const [messages, setMessages] = useState([]);
     const [userMessage, setUserMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
     useEffect(() => {
         const fetchVideos = async () => {
@@ -58,18 +59,32 @@ const InterviewAssistant = () => {
             {/* Left Side: Videos */}
             <div className="video-section">
                 <h2>📹 Interview Prep Videos</h2>
+
+                {/* Category Filter Dropdown */}
+                <div className="filter-container">
+                    <label>Filter by Category: </label>
+                    <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                        <option value="All">All</option>
+                        <option value="HR">HR</option>
+                        <option value="Technical">Technical</option>
+                    </select>
+                </div>
+
+                {/* Video Grid */}
                 <div className="video-grid">
                     {videos.length > 0 ? (
-                        videos.map((video) => (
-                            <div className="video-card" key={video.id}>
-                                <h4>{video.title}</h4>
-                                <div
-                                    className="video-iframe"
-                                    dangerouslySetInnerHTML={{ __html: video.Video_url }}
-                                />
-                                <p>{video.Description}</p>
-                            </div>
-                        ))
+                        videos
+                            .filter(video => selectedCategory === 'All' || video.category === selectedCategory)
+                            .map((video) => (
+                                <div className="video-card" key={video.id}>
+                                    <h4>{video.title}</h4>
+                                    <div
+                                        className="video-iframe"
+                                        dangerouslySetInnerHTML={{ __html: video.Video_url }}
+                                    />
+                                    <p>{video.Description}</p>
+                                </div>
+                            ))
                     ) : (
                         <p>No videos available.</p>
                     )}

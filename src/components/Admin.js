@@ -4,143 +4,117 @@ import {
   Row,
   Col,
   Card,
-  Button,
   Table,
+  Button,
   Form,
   Spinner,
-  Dropdown,
   ProgressBar,
-  Alert
+  Alert,
+  Dropdown
 } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { db, storage } from "./firebase";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL
-} from "firebase/storage";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  getDocs
-} from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import "./Admin.css";
 
 const Admin = () => {
+  // State
   const [placedStudents, setPlacedStudents] = useState([]);
-  const [upcomingPlacements, setUpcomingPlacements] = useState([]);
   const [companyName, setCompanyName] = useState("");
   const [companyDescription, setCompanyDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Fetch placed students on mount
   useEffect(() => {
     const fetchPlacedStudents = async () => {
-      const querySnapshot = await getDocs(collection(db, "placed-students"));
-      const students = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setPlacedStudents(students);
+      try {
+        const snapshot = await getDocs(collection(db, "placed-students"));
+        const students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setPlacedStudents(students);
+      } catch (err) {
+        console.error("Error fetching placed students:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
-
-    const fetchUpcomingPlacements = async () => {
-      const querySnapshot = await getDocs(collection(db, "upcoming-placements"));
-      const placements = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setUpcomingPlacements(placements);
-    };
-
     fetchPlacedStudents();
-    fetchUpcomingPlacements();
-    setIsLoading(false);
   }, []);
 
+  // Validate file type
   const isValidFileType = (file) => {
-    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-    return allowedTypes.includes(file.type);
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+    return file && allowed.includes(file.type);
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && isValidFileType(file)) {
+    if (isValidFileType(file)) {
       setSelectedFile(file);
       setError("");
     } else {
-      setError("Please select a valid PDF/DOC/DOCX file.");
       setSelectedFile(null);
+      setError("Please select a valid PDF/DOC/DOCX file.");
     }
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && isValidFileType(file)) {
-      setSelectedFile(file);
-      setError("");
-    } else {
-      setError("Unsupported file type.");
-    }
-  };
-
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!companyName || !companyDescription || !selectedFile) {
+    if (!companyName.trim() || !companyDescription.trim() || !selectedFile) {
       setError("All fields and a valid file are required.");
       return;
     }
-
+    setError("");
     setIsUploading(true);
     setUploadProgress(0);
-    setError("");
 
-    try {
-      const fileRef = ref(storage, `upcoming-placements/${Date.now()}_${selectedFile.name}`);
-      const uploadTask = uploadBytesResumable(fileRef, selectedFile);
+    const fileRef = ref(storage, `upcoming-placements/${Date.now()}_${selectedFile.name}`);
+    const uploadTask = uploadBytesResumable(fileRef, selectedFile);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          setUploadProgress(progress);
-        },
-        (error) => {
-          console.error(error);
-          setError("Upload failed: " + error.message);
-          setIsUploading(false);
-        },
-        async () => {
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setUploadProgress(progress);
+      },
+      err => {
+        console.error(err);
+        setError(`Upload failed: ${err.message}`);
+        setIsUploading(false);
+      },
+      async () => {
+        try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           await addDoc(collection(db, "upcoming-placements"), {
             companyName,
             description: companyDescription,
-            fileURL: downloadURL,
             fileName: selectedFile.name,
+            fileURL: downloadURL,
             timestamp: serverTimestamp()
           });
-
           setUploadSuccess(true);
-          setIsUploading(false);
           setCompanyName("");
           setCompanyDescription("");
           setSelectedFile(null);
-          setUploadProgress(0);
-
           setTimeout(() => setUploadSuccess(false), 4000);
+        } catch (dbErr) {
+          console.error(dbErr);
+          setError(`Error saving to Firestore: ${dbErr.message}`);
+        } finally {
+          setIsUploading(false);
         }
-      );
-    } catch (err) {
-      setError("Upload failed: " + err.message);
-      setIsUploading(false);
-    }
+      }
+    );
   };
 
   if (isLoading) {
@@ -198,9 +172,9 @@ const Admin = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {placedStudents.map((student, index) => (
+                    {placedStudents.map((student, idx) => (
                       <tr key={student.id}>
-                        <td>{index + 1}</td>
+                        <td>{idx + 1}</td>
                         <td>{student.name}</td>
                         <td>{student.course}</td>
                         <td>{student.company}</td>
@@ -225,25 +199,26 @@ const Admin = () => {
                   <Form.Label>Company Name</Form.Label>
                   <Form.Control
                     value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
+                    onChange={e => setCompanyName(e.target.value)}
                     required
                   />
                 </Form.Group>
+
                 <Form.Group className="mb-3">
                   <Form.Label>Company Description</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
                     value={companyDescription}
-                    onChange={(e) => setCompanyDescription(e.target.value)}
+                    onChange={e => setCompanyDescription(e.target.value)}
                     required
                   />
                 </Form.Group>
 
                 <div
                   className="file-upload mt-3"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={handleDrop}
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={handleFileChange}
                 >
                   <input
                     type="file"
@@ -252,13 +227,11 @@ const Admin = () => {
                     onChange={handleFileChange}
                     hidden
                   />
-                  <Button variant="secondary" onClick={() => document.getElementById("file-input").click()}>
+                  <Button variant="secondary" onClick={() => document.getElementById('file-input').click()}>
                     <i className="bi bi-upload me-2"></i>
-                    {selectedFile ? selectedFile.name : "Upload File"}
+                    {selectedFile ? selectedFile.name : 'Upload File'}
                   </Button>
-                  <p className="text-muted mt-2">
-                    Click or drag & drop a PDF/DOC/DOCX file
-                  </p>
+                  <p className="text-muted mt-2">Click or drag & drop a PDF/DOC/DOCX file</p>
                 </div>
 
                 {isUploading && (
@@ -268,20 +241,11 @@ const Admin = () => {
                 )}
 
                 <Button type="submit" className="mt-4" disabled={isUploading}>
-                  {isUploading ? "Uploading..." : "Add Placement"}
+                  {isUploading ? 'Uploading...' : 'Add Placement'}
                 </Button>
 
-                {uploadSuccess && (
-                  <Alert variant="success" className="mt-3">
-                    ✅ Placement uploaded successfully!
-                  </Alert>
-                )}
-
-                {error && (
-                  <Alert variant="danger" className="mt-3">
-                    ⚠️ {error}
-                  </Alert>
-                )}
+                {uploadSuccess && <Alert variant="success" className="mt-3">✅ Placement uploaded successfully!</Alert>}
+                {error && <Alert variant="danger" className="mt-3">⚠️ {error}</Alert>}
               </Form>
             </Card.Body>
           </Card>
