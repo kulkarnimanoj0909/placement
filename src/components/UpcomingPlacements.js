@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { db } from "./firebase";
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot
+} from "firebase/firestore";
 import {
   Card,
   Spinner,
@@ -13,23 +19,41 @@ import "./UpcomingPlacements.css";
 const UpcomingPlacements = () => {
   const [placements, setPlacements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalUrl, setModalUrl] = useState("");
 
   useEffect(() => {
-    const fetchPlacements = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/placements");
-        // Sort placements by timestamp descending (if not already sorted on backend)
-        const sorted = res.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        setPlacements(sorted);
-      } catch (error) {
-        console.error("Error fetching placements:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const q = query(
+      collection(db, "upcoming-placements"), // <-- Firestore collection name
+      orderBy("timestamp", "desc")
+    );
 
-    fetchPlacements();
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPlacements(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe(); // Cleanup on unmount
   }, []);
+
+  const openPdf = (url) => {
+    // Open in new tab
+    window.open(url, "_blank");
+  };
+
+  const openModal = (url) => {
+    setModalUrl(url);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setModalUrl("");
+  };
 
   if (loading) {
     return (
@@ -48,7 +72,7 @@ const UpcomingPlacements = () => {
           <p className="text-center">No new placement messages.</p>
         ) : (
           placements.map((placement, index) => (
-            <Col md={6} lg={4} key={placement._id || index} className="mb-4">
+            <Col md={6} lg={4} key={placement.id} className="mb-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -60,19 +84,17 @@ const UpcomingPlacements = () => {
                     <Card.Text>{placement.description}</Card.Text>
                     {placement.timestamp && (
                       <p className="text-muted small">
-                        {new Date(placement.timestamp).toLocaleString()}
+                        {new Date(placement.timestamp.seconds * 1000).toLocaleString()}
                       </p>
                     )}
-                    {placement.fileURL && (
-                      <a
-                        href={placement.fileURL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-outline-primary mt-2"
-                      >
-                        📄 View PDF
-                      </a>
-                    )}
+                    <a
+                      href={placement.fileURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-outline-primary mt-2"
+                    >
+                      📄 View PDF
+                    </a>
                   </Card.Body>
                 </Card>
               </motion.div>
