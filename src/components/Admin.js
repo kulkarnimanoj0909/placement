@@ -13,23 +13,11 @@ import {
   Alert
 } from "react-bootstrap";
 import { motion } from "framer-motion";
-import { db, storage } from "./firebase";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL
-} from "firebase/storage";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  getDocs
-} from "firebase/firestore";
+import axios from "axios";
 import "./Admin.css";
 
 const Admin = () => {
   const [placedStudents, setPlacedStudents] = useState([]);
-  const [upcomingPlacements, setUpcomingPlacements] = useState([]);
   const [companyName, setCompanyName] = useState("");
   const [companyDescription, setCompanyDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -41,30 +29,25 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchPlacedStudents = async () => {
-      const querySnapshot = await getDocs(collection(db, "placed-students"));
-      const students = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setPlacedStudents(students);
-    };
-
-    const fetchUpcomingPlacements = async () => {
-      const querySnapshot = await getDocs(collection(db, "upcoming-placements"));
-      const placements = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setUpcomingPlacements(placements);
+      try {
+        const res = await axios.get("http://localhost:5000/api/placed-students");
+        setPlacedStudents(res.data);
+      } catch (err) {
+        console.error("Error fetching placed students:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchPlacedStudents();
-    fetchUpcomingPlacements();
-    setIsLoading(false);
   }, []);
 
   const isValidFileType = (file) => {
-    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
     return allowedTypes.includes(file.type);
   };
 
@@ -102,43 +85,32 @@ const Admin = () => {
     setUploadProgress(0);
     setError("");
 
+    const formData = new FormData();
+    formData.append("companyName", companyName);
+    formData.append("description", companyDescription);
+    formData.append("file", selectedFile);
+
     try {
-      const fileRef = ref(storage, `upcoming-placements/${Date.now()}_${selectedFile.name}`);
-      const uploadTask = uploadBytesResumable(fileRef, selectedFile);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          setUploadProgress(progress);
+      await axios.post("http://localhost:5000/api/placements", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
         },
-        (error) => {
-          console.error(error);
-          setError("Upload failed: " + error.message);
-          setIsUploading(false);
-        },
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          await addDoc(collection(db, "upcoming-placements"), {
-            companyName,
-            description: companyDescription,
-            fileURL: downloadURL,
-            fileName: selectedFile.name,
-            timestamp: serverTimestamp()
-          });
-
-          setUploadSuccess(true);
-          setIsUploading(false);
-          setCompanyName("");
-          setCompanyDescription("");
-          setSelectedFile(null);
-          setUploadProgress(0);
-
-          setTimeout(() => setUploadSuccess(false), 4000);
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percent);
         }
-      );
+      });
+
+      setUploadSuccess(true);
+      setCompanyName("");
+      setCompanyDescription("");
+      setSelectedFile(null);
+      setUploadProgress(0);
+      setTimeout(() => setUploadSuccess(false), 4000);
     } catch (err) {
+      console.error("Upload failed:", err);
       setError("Upload failed: " + err.message);
+    } finally {
       setIsUploading(false);
     }
   };
@@ -199,7 +171,7 @@ const Admin = () => {
                   </thead>
                   <tbody>
                     {placedStudents.map((student, index) => (
-                      <tr key={student.id}>
+                      <tr key={student._id}>
                         <td>{index + 1}</td>
                         <td>{student.name}</td>
                         <td>{student.course}</td>

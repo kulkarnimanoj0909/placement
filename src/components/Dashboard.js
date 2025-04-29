@@ -16,7 +16,7 @@ const Dashboard = () => {
           <button onClick={() => navigate("/Assessment")}>Assessment</button>
           <button onClick={() => navigate("/courses")}>Courses</button>
           <button onClick={() => navigate("/upcoming-placements")}>Upcoming Placements</button>
-          <button onClick={() => navigate("/interview")}>Inter</button>
+          <button onClick={() => navigate("/interview")}>InterView</button>
         </div>
       </nav>
 

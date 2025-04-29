@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "./firebase";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot
-} from "firebase/firestore";
+import axios from "axios";
 import {
   Card,
   Spinner,
@@ -21,21 +15,20 @@ const UpcomingPlacements = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(
-      collection(db, "upcoming-placements"), // <-- Firestore collection name
-      orderBy("timestamp", "desc")
-    );
+    const fetchPlacements = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/placements");
+        // Sort placements by timestamp descending (if not already sorted on backend)
+        const sorted = res.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        setPlacements(sorted);
+      } catch (error) {
+        console.error("Error fetching placements:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setPlacements(data);
-      setLoading(false);
-    });
-
-    return () => unsubscribe(); // Cleanup on unmount
+    fetchPlacements();
   }, []);
 
   if (loading) {
@@ -55,7 +48,7 @@ const UpcomingPlacements = () => {
           <p className="text-center">No new placement messages.</p>
         ) : (
           placements.map((placement, index) => (
-            <Col md={6} lg={4} key={placement.id} className="mb-4">
+            <Col md={6} lg={4} key={placement._id || index} className="mb-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -67,17 +60,19 @@ const UpcomingPlacements = () => {
                     <Card.Text>{placement.description}</Card.Text>
                     {placement.timestamp && (
                       <p className="text-muted small">
-                        {new Date(placement.timestamp.seconds * 1000).toLocaleString()}
+                        {new Date(placement.timestamp).toLocaleString()}
                       </p>
                     )}
-                    <a
-                      href={placement.fileURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-outline-primary mt-2"
-                    >
-                      📄 View PDF
-                    </a>
+                    {placement.fileURL && (
+                      <a
+                        href={placement.fileURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline-primary mt-2"
+                      >
+                        📄 View PDF
+                      </a>
+                    )}
                   </Card.Body>
                 </Card>
               </motion.div>
