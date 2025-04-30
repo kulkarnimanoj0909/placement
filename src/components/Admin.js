@@ -84,7 +84,7 @@ const Admin = () => {
       await axios.post("http://localhost:5000/api/placements", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
-        },
+      },
         onUploadProgress: (progressEvent) => {
           const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           setUploadProgress(percent);

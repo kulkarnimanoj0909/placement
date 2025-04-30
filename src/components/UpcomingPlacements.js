@@ -8,17 +8,18 @@ import {
   Col
 } from "react-bootstrap";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // <-- Added
 import "./UpcomingPlacements.css";
 
 const UpcomingPlacements = () => {
   const [placements, setPlacements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // <-- Initialize router
 
   useEffect(() => {
     const fetchPlacements = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/placements");
-        // Sort placements by timestamp descending (if not already sorted on backend)
         const sorted = res.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setPlacements(sorted);
       } catch (error) {
@@ -58,11 +59,22 @@ const UpcomingPlacements = () => {
                   <Card.Body>
                     <Card.Title>{placement.companyName}</Card.Title>
                     <Card.Text>{placement.description}</Card.Text>
+
                     {placement.timestamp && (
-                      <p className="text-muted small">
-                        {new Date(placement.timestamp).toLocaleString()}
-                      </p>
+                      <>
+                        <p className="text-muted small mb-1">
+                          📅 Posted: {new Date(placement.timestamp).toLocaleString()}
+                        </p>
+                        <p className="text-danger small">
+                          ⏳ Deadline:{" "}
+                          {new Date(
+                            new Date(placement.timestamp).getTime() +
+                            2 * 24 * 60 * 60 * 1000
+                          ).toLocaleString()}
+                        </p>
+                      </>
                     )}
+
                     {placement.fileURL && (
                       <a
                         href={placement.fileURL}
@@ -73,6 +85,13 @@ const UpcomingPlacements = () => {
                         📄 View PDF
                       </a>
                     )}
+
+                    <button
+                      className="btn btn-success mt-2 ms-2"
+                      onClick={() => navigate(`/apply/${placement._id}`)}
+                    >
+                      📝 Apply Here
+                    </button>
                   </Card.Body>
                 </Card>
               </motion.div>

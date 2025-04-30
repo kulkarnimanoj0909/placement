@@ -17,6 +17,7 @@ const Dashboard = () => {
           <button onClick={() => navigate("/courses")}>Courses</button>
           <button onClick={() => navigate("/upcoming-placements")}>Upcoming Placements</button>
           <button onClick={() => navigate("/interview")}>InterView</button>
+          <button onClick={() => navigate("/feedback")}>Share Experiences</button> {/* New Button */}
         </div>
       </nav>
 
@@ -42,13 +43,16 @@ const Dashboard = () => {
           <h3>Upcoming Placements</h3>
           <p>Check upcoming placement opportunities.</p>
         </div>
-       
+
         <div className="interview-card" onClick={() => navigate("/interview")}>
           <h3>Interview Assistant</h3>
-          <p>CDheck Your Communication and Interview Cracking Skill</p>
+          <p>Check your communication and interview cracking skills.</p>
         </div>
-        
 
+        <div className="dashboard-card" onClick={() => navigate("/feedback")}> {/* Optional Card */}
+          <h3>Share Experiences</h3>
+          <p>Help juniors by sharing your placement journey and interview tips.</p>
+        </div>
       </div>
     </div>
   );
