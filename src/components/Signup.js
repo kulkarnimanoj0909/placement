@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import "./Signup.css";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Alert, Card, Spinner } from "react-bootstrap";
 import { motion } from "framer-motion";
-import { auth, db } from "./firebase"; // Ensure correct imports
+import { auth, db } from "./firebase"; 
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -63,54 +64,102 @@ const Signup = () => {
       } else if (err.code === "auth/invalid-email") {
         setError("Invalid email format. Please enter a valid email.");
       } else {
+        console.error("Unexpected signup error:", err);
         setError("Signup failed. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <Card className="p-4 shadow-lg" style={{ width: "30rem" }}>
-          <h2 className="text-center mb-3">Signup</h2>
+          <h2 className="text-center mb-3 signup-title">Signup</h2>
 
           {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleSignup}>
             <Form.Group className="mb-3">
               <Form.Label>First Name</Form.Label>
-              <Form.Control type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required placeholder="Enter your first name" />
+              <Form.Control
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                placeholder="Enter your first name"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required placeholder="Enter your last name" />
+              <Form.Control
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                placeholder="Enter your last name"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Current Semester</Form.Label>
-              <Form.Control type="text" value={semester} onChange={(e) => setSemester(e.target.value)} required placeholder="Enter your semester" />
+              <Form.Control
+                type="text"
+                value={semester}
+                onChange={(e) => setSemester(e.target.value)}
+                required
+                placeholder="Enter your semester"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Mobile Number</Form.Label>
-              <Form.Control type="text" value={mobile} onChange={(e) => setMobile(e.target.value)} required placeholder="Enter your mobile number" />
+              <Form.Control
+                type="text"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                required
+                placeholder="Enter your mobile number"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Enter your email" />
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Enter your email"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Enter a strong password" />
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter a strong password"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Confirm Password</Form.Label>
-              <Form.Control type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required placeholder="Confirm your password" />
+              <Form.Control
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Confirm your password"
+              />
             </Form.Group>
 
             <motion.div whileHover={{ scale: 1.05 }}>
@@ -123,7 +172,15 @@ const Signup = () => {
           <div className="text-center mt-3">
             <p>
               Already have an account?{" "}
-              <span style={{ color: "blue", cursor: "pointer", textDecoration: "underline", fontWeight: "bold" }} onClick={() => navigate("/login")}>
+              <span
+                style={{
+                  color: "blue",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  fontWeight: "bold",
+                }}
+                onClick={() => navigate("/login")}
+              >
                 Login here
               </span>
             </p>

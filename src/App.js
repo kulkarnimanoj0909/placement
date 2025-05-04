@@ -16,15 +16,14 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<Admin />} /> {/* Ensure route exists */}
-        <Route path="/upcoming-placements" element={<UpcomingPlacements />} />
-        <Route path="/Assessment" element={<Assessment />} /> {/* Ensure route exists */}
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Ensure route exists */}
+        <Route path="/admin" element={<Admin />} /> 
+        <Route path="/dashboard" element={<Dashboard />} /> 
+         <Route path="/upcoming-placements" element={<UpcomingPlacements />} />
+        <Route path="/Assessment" element={<Assessment />} /> 
         <Route path="/interview" element={<InterviewAssistant />} />
         <Route path="/feedback" element={<Feedback />} />
 
       </Routes>
-      
     </Router>
   );
 }

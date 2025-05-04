@@ -32,7 +32,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchPlacedStudents = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/placed-students");
+        const res = await axios.get("http://localhost:5000/api/placements");
         setPlacedStudents(res.data);
       } catch (err) {
         console.error("Error fetching placed students:", err);
@@ -81,7 +81,8 @@ const Admin = () => {
     formData.append("file", selectedFile);
 
     try {
-      await axios.post("http://localhost:5000/api/placements", formData, {
+      await axios.post("http://localhost:5000/api/placements", formData ,
+      {
         headers: {
           "Content-Type": "multipart/form-data"
       },

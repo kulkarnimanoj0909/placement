@@ -29,38 +29,28 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Cloudinary storage for multer (handling file uploads to Cloudinary)
+// Cloudinary storage for multer
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "placements", // Files will be stored in the 'placements' folder on Cloudinary
-    resource_type: "raw", // Handle raw files (like PDF, DOCX, etc.)
-    format: async (req, file) => file.originalname.split('.').pop() // Keep the original file extension
+    folder: "placements",
+    resource_type: "raw", // for PDFs, DOC, DOCX
+    format: async (req, file) => file.originalname.split('.').pop()
   }
 });
 const upload = multer({ storage });
 
-// MongoDB schema for Feedbacks
+/* ------------------ FEEDBACK COLLECTION ------------------ */
 const feedbackSchema = new mongoose.Schema({
-  companyName: {
-    type: String,
-    required: true, // Making companyName required
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-  fileURL: String,  // Storing file URL from Cloudinary
-  fileName: String   // Storing the file name
+  companyName: { type: String, required: true },
+  text: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+  fileURL: String,
+  fileName: String
 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);
 
-// POST API for feedback submission (including file upload and company name)
 app.post("/api/feedback", upload.single("file"), async (req, res) => {
   const { companyName, text } = req.body;
   const fileURL = req.file ? req.file.path : null;
@@ -71,12 +61,7 @@ app.post("/api/feedback", upload.single("file"), async (req, res) => {
   }
 
   try {
-    const newFeedback = new Feedback({
-      companyName,
-      text,
-      fileURL,
-      fileName
-    });
+    const newFeedback = new Feedback({ companyName, text, fileURL, fileName });
     await newFeedback.save();
     res.status(201).json(newFeedback);
   } catch (error) {
@@ -85,7 +70,6 @@ app.post("/api/feedback", upload.single("file"), async (req, res) => {
   }
 });
 
-// GET API to fetch all feedbacks (including file URLs and company names)
 app.get("/api/feedback", async (req, res) => {
   try {
     const feedbacks = await Feedback.find().sort({ timestamp: -1 });
@@ -96,7 +80,52 @@ app.get("/api/feedback", async (req, res) => {
   }
 });
 
-// Start the server
+/* ------------------ PLACEMENTS COLLECTION ------------------ */
+const placementSchema = new mongoose.Schema({
+  companyName: { type: String, required: true },
+  description: { type: String, required: true }, // updated to match frontend
+  fileURL: String,
+  fileName: String,
+  timestamp: { type: Date, default: Date.now }
+});
+
+const Placement = mongoose.model("Placement", placementSchema);
+
+app.post("/api/placements", upload.single("file"), async (req, res) => {
+  const { companyName, description } = req.body;
+  const fileURL = req.file ? req.file.path : null;
+  const fileName = req.file ? req.file.originalname : null;
+
+  if (!companyName || !description) {
+    return res.status(400).send("Company name and description are required");
+  }
+
+  try {
+    const newPlacement = new Placement({
+      companyName,
+      description,
+      fileURL,
+      fileName
+    });
+    await newPlacement.save();
+    res.status(201).json(newPlacement);
+  } catch (error) {
+    console.error("Error saving placement:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+app.get("/api/placements", async (req, res) => {
+  try {
+    const placements = await Placement.find().sort({ timestamp: -1 });
+    res.json(placements);
+  } catch (error) {
+    console.error("Error fetching placements:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+/* ------------------ START SERVER ------------------ */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
