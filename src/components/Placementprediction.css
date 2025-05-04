@@ -1,0 +1,16 @@
+input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  input[type="file"] {
+    padding: 6px;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }

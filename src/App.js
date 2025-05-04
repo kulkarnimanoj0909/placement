@@ -9,6 +9,7 @@ import UpcomingPlacements from "./components/UpcomingPlacements"; // adjust path
 import Assessment from  "./components/Assessment"; // adjust path
 import InterviewAssistant from './components/InterviewAssistant';
 import Feedback from "./components/Feedback"; 
+import PlacementPrediction from "./components/PlacementPrediction";
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
         <Route path="/Assessment" element={<Assessment />} /> 
         <Route path="/interview" element={<InterviewAssistant />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/placementprediction" element={<PlacementPrediction />} />
 
       </Routes>
     </Router>

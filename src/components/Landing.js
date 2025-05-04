@@ -42,8 +42,8 @@ const Landing = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
-                        <Nav.Link href="#about">aboutus</Nav.Link>
-                        <Nav.Link href="#stats">stats</Nav.Link>
+                        <Nav.Link href="#about">About us</Nav.Link>
+                        <Nav.Link href="#stats">Stats</Nav.Link>
                             <Nav.Link href="#contact">Contact</Nav.Link>
                             <Button className="login-btn" onClick={() => navigate("/login")}>
                                 Login
