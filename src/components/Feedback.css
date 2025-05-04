@@ -1,0 +1,185 @@
+/* General Feedback Form Styling */
+.feedback-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .feedback-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .input-field {
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+  }
+  
+  .input-field:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+  
+  .feedback-form button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    background-color: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .feedback-form button:hover {
+    background-color: #5561c2;
+    transform: translateY(-2px);
+  }
+  
+  .feedback-list {
+    margin-top: 40px;
+  }
+  
+  .feedback-list h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 16px;
+  }
+  
+  .feedback-list .feedback-item {
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
+  }
+  
+  .feedback-list .feedback-item h4 {
+    color: #667eea;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .feedback-list .feedback-item p {
+    margin: 0;
+    color: #444;
+    font-size: 1rem;
+  }
+  
+  .feedback-list .feedback-item a {
+    display: inline-block;
+    margin-top: 8px;
+    color: #667eea;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .feedback-list .feedback-item a:hover {
+    color: #3b5baf;
+  }
+  
+  .no-feedback-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .feedback-container {
+      padding: 15px;
+    }
+  
+    .feedback-container h2 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+  
+    .feedback-form .input-field {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
+  
+    .feedback-form button {
+      font-size: 0.9rem;
+      padding: 10px 15px;
+    }
+  
+    .feedback-list h3 {
+      font-size: 1.3rem;
+    }
+  
+    .feedback-list .feedback-item {
+      padding: 10px;
+    }
+  
+    .feedback-list .feedback-item h4 {
+      font-size: 1.1rem;
+    }
+  
+    .feedback-list .feedback-item p {
+      font-size: 0.9rem;
+    }
+  
+    .feedback-list .feedback-item a {
+      font-size: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .feedback-container {
+      padding: 10px;
+    }
+  
+    .feedback-container h2 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+  
+    .feedback-form .input-field {
+      font-size: 0.85rem;
+      padding: 8px;
+    }
+  
+    .feedback-form button {
+      font-size: 0.85rem;
+      padding: 8px 12px;
+    }
+  
+    .feedback-list h3 {
+      font-size: 1.2rem;
+    }
+  
+    .feedback-list .feedback-item {
+      padding: 8px;
+    }
+  
+    .feedback-list .feedback-item h4 {
+      font-size: 1rem;
+    }
+  
+    .feedback-list .feedback-item p {
+      font-size: 0.85rem;
+    }
+  
+    .feedback-list .feedback-item a {
+      font-size: 0.75rem;
+    }
+  }
+  

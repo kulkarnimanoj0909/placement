@@ -1,77 +1,210 @@
-/* InterviewAssistant.css */
-
-.interview-cardd {
-    background-color: #f9f9f9;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 80%;
-    margin: 50px auto;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.interview-container {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(to right, #e3f2fd, #fce4ec);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
 }
 
-.interview-cardd:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+/* === Shared Section Styles === */
+.video-section,
+.chatbot-section {
+    width: 50%;
+    padding: 24px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: fadeSlide 1s ease-in-out;
 }
 
-h2 {
-    color: #4a90e2;
-    font-family: 'Arial', sans-serif;
-    font-size: 2rem;
+/* === Section Headers === */
+.video-section h2,
+.chatbot-section h2 {
     margin-bottom: 20px;
+    text-align: center;
+    color: #1a202c;
+    font-size: 1.6rem;
+    font-weight: bold;
 }
 
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-    font-family: 'Arial', sans-serif;
-    outline: none;
-    resize: none;
-    transition: border-color 0.3s ease;
-}
-
-textarea:focus {
-    border-color: #4a90e2;
-}
-
-button {
-    background-color: #4a90e2;
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #357ab7;
-}
-
-button:active {
-    background-color: #2c5a84;
-}
-
-p {
-    color: #333;
-    font-size: 1.2rem;
-    font-family: 'Arial', sans-serif;
-    margin-top: 20px;
+/* 🎯 Filter Styling */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
     font-weight: 600;
 }
 
-p:first-of-type {
-    color: #28a745;
+.filter-container select {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #a0aec0;
+    font-size: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-p:nth-of-type(2) {
-    color: #f1a700;
+.filter-container select:hover {
+    transform: scale(1.02);
+}
+
+/* 🎥 Video Cards */
+.video-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.video-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 16px rgba(0,0,0,0.15);
+}
+
+.video-card h4 {
+    margin-bottom: 10px;
+    color: #2d3748;
+}
+
+.video-iframe iframe {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+/* 💬 Chatbot Section */
+.chatbot-section {
+    border-left: 2px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-box {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.04);
+    overflow-y: auto;
+    max-height: 70vh;
+    scroll-behavior: smooth;
+}
+
+/* Chat Messages */
+.chat-message {
+    margin: 10px 0;
+    padding: 12px 18px;
+    border-radius: 20px;
+    max-width: 75%;
+    line-height: 1.5;
+    animation: fadeSlide 0.4s ease;
+    word-wrap: break-word;
+}
+
+.chat-message.user {
+    align-self: flex-end;
+    background-color: #90cdf4;
+    color: #1a202c;
+}
+
+.chat-message.bot {
+    align-self: flex-start;
+    background-color: #edf2f7;
+    white-space: pre-wrap;
+    color: #2d3748;
+}
+
+/* Chat Input Area */
+.chat-input {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px 18px;
+    border-radius: 20px;
+    border: 1px solid #cbd5e0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.chat-input input:focus {
+    outline: none;
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.3);
+}
+
+.chat-input button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.chat-input button:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 📱 Responsive Design */
+@media screen and (max-width: 768px) {
+    .interview-container {
+        flex-direction: column;
+    }
+
+    .video-section,
+    .chatbot-section {
+        width: 100%;
+        border-left: none;
+        border-top: 2px solid #e2e8f0;
+    }
+
+    .chat-box {
+        max-height: 50vh;
+    }
+
+    .video-iframe iframe {
+        height: 180px;
+    }
 }

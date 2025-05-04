@@ -29,55 +29,18 @@ const Assessment = () => {
 
     try {
       setLoading(true);
-
-      // Local JSON fallback for Python quiz
-      if (category.toLowerCase() === 'python') {
-        const localRes = await fetch('/python_questions.json');
-        const localData = await localRes.json();
-        setQuestions(localData);
-        localStorage.setItem(`quiz-${category}`, JSON.stringify(localData));
-      }
-      // Local JSON fallback for SQL quiz
-      else if (category.toLowerCase() === 'sql') {
-        const localRes = await fetch('/sql_questions.json');
-        const localData = await localRes.json();
-        setQuestions(localData);
-        localStorage.setItem(`quiz-${category}`, JSON.stringify(localData));
-      } 
-      else {
-        // Fetch questions from API for other categories
-        const res = await axios.get('https://quizapi.io/api/v1/questions', {
-          //https://quizapi.io/api/v1/questions?category=pythong&limit=5
-          headers: {
-            'X-Api-Key': process.env.REACT_APP_QUIZAPI_KEY,
-          },
-          params: {
-            category: category,
-            limit: 5,
-          },
-        });
-        setQuestions(res.data);
-        localStorage.setItem(`quiz-${category}`, JSON.stringify(res.data));
-      }
-
+      const res = await axios.get('https://quizapi.io/api/v1/questions', {
+        headers: { 'X-Api-Key': process.env.REACT_APP_QUIZAPI_KEY },
+        params: { category, limit: 5 },
+      });
+      setQuestions(res.data);
+      localStorage.setItem(`quiz-${category}`, JSON.stringify(res.data));
       setQuizStarted(true);
       setQuizCompleted(false);
       setScore(null);
       setError(null);
     } catch (error) {
-      if (error.response && error.response.data.error === 'Too Many Requests') {
-        setError('API rate limit exceeded. Using fallback questions.');
-        if (category.toLowerCase() === 'sql') {
-          // Fallback to local SQL questions if API limit is reached
-          const localRes = await fetch('/sql_questions.json');
-          const localData = await localRes.json();
-          setQuestions(localData);
-          localStorage.setItem(`quiz-${category}`, JSON.stringify(localData));
-        }
-      } else {
-        console.error('Error fetching questions:', error);
-        setError('Failed to fetch questions. Please try another quiz.');
-      }
+      setError('Failed to fetch questions. Please try another quiz.');
     } finally {
       setLoading(false);
     }
@@ -109,7 +72,6 @@ const Assessment = () => {
 
   const calculateScore = () => {
     let correct = 0;
-
     questions.forEach((question, index) => {
       const selectedAnswerKey = answers[index];
       const correctAnswerKey = Object.entries(question.correct_answers)
@@ -122,7 +84,6 @@ const Assessment = () => {
         }
       }
     });
-
     setScore(correct);
     setQuizCompleted(true);
   };
@@ -160,20 +121,22 @@ const Assessment = () => {
           {questions.map((q, index) => (
             <div key={index} className="question-card">
               <p className="question"><strong>Q{index + 1}:</strong> {q.question}</p>
-              {Object.entries(q.answers).map(([key, value]) =>
-                value ? (
-                  <div key={key} className="answer-option">
-                    <input 
-                      type="radio" 
-                      name={`q-${index}`} 
-                      value={key} 
-                      checked={answers[index] === key}
-                      onChange={() => handleAnswerChange(index, key)} 
-                    />
-                    <label>{value}</label>
-                  </div>
-                ) : null
-              )}
+              <div className="options-grid">
+                {Object.entries(q.answers).map(([key, value]) => (
+                  value && (
+                    <label className="option-item" key={key}>
+                      <input
+                        type="radio"
+                        name={`q-${index}`}
+                        value={key}
+                        checked={answers[index] === key}
+                        onChange={() => handleAnswerChange(index, key)}
+                      />
+                      <span>{value}</span>
+                    </label>
+                  )
+                ))}
+              </div>
             </div>
           ))}
 
