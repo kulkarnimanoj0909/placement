@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
 const Dashboard = () => {
+  const [isMenuActive, setIsMenuActive] = useState(false); // State to toggle menu
   const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setIsMenuActive(!isMenuActive); // Toggle the menu visibility
+  };
 
   return (
     <div className="dashboard-container">
       {/* Navbar */}
       <nav className="navbar">
         <h2 className="logo">Placement Portal</h2>
-        <div className="nav-links">
+        {/* Hamburger icon */}
+        <div className={`navbar-toggle ${isMenuActive ? "active" : ""}`} onClick={toggleMenu}>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        {/* Navbar Links */}
+        <div className={`nav-links ${isMenuActive ? "active" : ""}`}>
           <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-          <button onClick={() => navigate("/placement-prediction")}>Placement Prediction</button>
+          <button onClick={() => navigate("/placementprediction")}>Placement Prediction</button>
           <button onClick={() => navigate("/Assessment")}>Assessment</button>
           <button onClick={() => navigate("/courses")}>Courses</button>
           <button onClick={() => navigate("/upcoming-placements")}>Upcoming Placements</button>
-          <button onClick={() => navigate("/interview")}>InterView</button>
+          <button onClick={() => navigate("/interview")}>Interview Assistant</button>
           <button onClick={() => navigate("/feedback")}>Share Experiences</button> {/* New Button */}
         </div>
       </nav>
@@ -24,7 +36,7 @@ const Dashboard = () => {
       {/* Dashboard Feature Cards */}
       <h1>Welcome to Placement Portal</h1>
       <div className="dashboard-grid">
-        <div className="dashboard-card" onClick={() => navigate("/placement-prediction")}>
+        <div className="dashboard-card" onClick={() => navigate("/placementprediction")}>
           <h3>Placement Prediction</h3>
           <p>Check your eligibility based on your skills and resume.</p>
         </div>

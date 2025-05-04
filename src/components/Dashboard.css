@@ -29,17 +29,37 @@
   transition: box-shadow 0.4s ease;
   flex-wrap: wrap;
 }
+
 .navbar:hover {
   box-shadow: 0 6px 18px var(--shadow-light);
 }
 
-.nav-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+/* Navbar toggle icon for mobile view */
+.navbar .navbar-toggle {
+  display: none; /* Hide by default */
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 10;
+  position: absolute; /* Position it absolutely */
+  right: 24px; /* Align it to the right */
 }
 
-/* Navbar button links styling */
+/* Navbar toggle button styling */
+.navbar .navbar-toggle div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+/* Navbar links styling */
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
 .nav-links button {
   background: transparent;
   border: 2px solid transparent;
@@ -51,9 +71,41 @@
   border-radius: 6px;
   transition: background 0.3s ease, transform 0.2s ease;
 }
+
 .nav-links button:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-3px);
+}
+
+/* Mobile view toggle button visibility */
+@media (max-width: 768px) {
+  /* In mobile view, show the toggle button and hide navbar links by default */
+  .navbar .navbar-toggle {
+    display: flex; /* Show the toggle button */
+  }
+
+  .nav-links {
+    display: none; /* Hide links by default in mobile view */
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  /* Show nav-links when toggle button is active */
+  .navbar .navbar-toggle.active + .nav-links {
+    display: flex;
+  }
+}
+
+/* In desktop view, show navbar links by default */
+@media (min-width: 769px) {
+  .nav-links {
+    display: flex; /* Show links in desktop view */
+  }
+
+  .navbar .navbar-toggle {
+    display: none; /* Hide the toggle button in desktop view */
+  }
 }
 
 /* Dashboard grid layout */
@@ -76,6 +128,7 @@
   transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
   overflow: hidden;
 }
+
 .dashboard-card:hover,
 .interview-card:hover {
   transform: translateY(-10px) scale(1.05);
@@ -94,6 +147,7 @@
     transform: scale(1);
   }
 }
+
 @keyframes fadeInGrid {
   from {
     opacity: 0;
@@ -104,10 +158,12 @@
     transform: translateY(0);
   }
 }
+
 .dashboard-card,
 .interview-card {
   animation: slideUp 0.6s ease-out forwards;
 }
+
 @keyframes slideUp {
   0% {
     opacity: 0;
@@ -140,6 +196,11 @@
   .dashboard-grid {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+
+  /* Show nav-links when toggle is active */
+  .navbar .navbar-toggle.active + .nav-links {
+    display: flex;
   }
 }
 

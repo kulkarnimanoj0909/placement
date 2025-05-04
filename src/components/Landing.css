@@ -134,11 +134,81 @@ body {
 }
 
 /* Responsive improvements */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+    .hero-subtitle {
+        font-size: 1.3rem;
+    }
+    .section-title {
+        font-size: 2.2rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
     }
     .hero-subtitle {
-        font-size: 1.1rem;
+        font-size: 1.1rem;
+    }
+    .section-title {
+        font-size: 2rem;
+    }
+    .hero-section {
+        padding: 80px 15px;
+    }
+    .recruiters-section {
+        padding: 30px 0;
+    }
+    .marquee-container img {
+        height: 60px;
+        margin: 0 15px;
+    }
+    .navbar {
+        padding: 10px !important;
+    }
+    .login-btn {
+        margin-left: 8px;
+        padding: 6px 15px;
+    }
 }
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    .hero-section {
+        padding: 60px 10px;
+    }
+    .about-text {
+        font-size: 0.95rem;
+        padding: 0 10px;
+    }
+    .marquee-container img {
+        height: 50px;
+        margin: 0 10px;
+    }
+    .start-btn {
+        padding: 10px 20px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .login-btn {
+        margin-left: 0;
+        margin-top: 5px;
+        padding: 6px 12px;
+        width: 100%;
+    }
+    .navbar-nav {
+        margin-top: 10px;
+    }
 }
